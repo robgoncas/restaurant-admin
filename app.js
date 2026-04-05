@@ -6,6 +6,7 @@ import { engine } from 'express-handlebars';
 
 import auth_routes from './routes/auth_routes.js';
 import view_routes from './routes/view_routes.js';
+import e from 'express';
 
 dotenv.config();
 const app = express();
@@ -27,4 +28,4 @@ app.use('/', view_routes);
 
 app.use('/api/auth', auth_routes);
 
-app.listen(3000, () => console.log('http://localhost:3000'));
+export default app;
