@@ -28,10 +28,4 @@ app.use('/', view_routes);
 
 app.use('/api/auth', auth_routes);
 
-// Solo ejecutar si no estamos en Vercel
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.SERVER_PORT || 3000;
-  app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
-}
-
 export default app;
