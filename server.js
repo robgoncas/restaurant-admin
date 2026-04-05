@@ -6,7 +6,7 @@ import { engine } from 'express-handlebars';
 
 import auth_routes from './routes/auth_routes.js';
 import view_routes from './routes/view_routes.js';
-import e from 'express';
+import express from 'express';
 
 dotenv.config();
 const app = express();
