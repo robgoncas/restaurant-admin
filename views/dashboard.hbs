@@ -1,0 +1,225 @@
+<div class="container-fluid">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-black px-4 shadow">
+    <span class="navbar-brand fw-bold">🍽️ RestoAdmin</span>
+    <div class="ms-auto">
+      <span class="text-white me-3">Bienvenido {{usuario}}</span>
+      <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+    </div>
+  </nav>
+
+  <!-- KPI CARDS -->
+  <div class="row mt-4 g-3">
+
+    <div class="col-md-3">
+      <div class="card bg-dark text-white shadow border-0">
+        <div class="card-body">
+          <h6>Ventas Hoy</h6>
+          <h3>$1,250</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card bg-dark text-white shadow border-0">
+        <div class="card-body">
+          <h6>Pedidos</h6>
+          <h3>320</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card bg-dark text-white shadow border-0">
+        <div class="card-body">
+          <h6>Clientes</h6>
+          <h3>210</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card bg-dark text-white shadow border-0">
+        <div class="card-body">
+          <h6>Conversión</h6>
+          <h3>5.6%</h3>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GRÁFICOS -->
+  <div class="row mt-4 g-4">
+
+    <div class="col-lg-6">
+      <div class="card bg-dark text-white shadow border-0 p-3">
+        <h6>Ventas Mensuales</h6>
+        <canvas id="ventas"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card bg-dark text-white shadow border-0 p-3">
+        <h6>Platos Más Vendidos</h6>
+        <canvas id="platos"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card bg-dark text-white shadow border-0 p-3">
+        <h6>Ventas por Categoría</h6>
+        <canvas id="categorias"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card bg-dark text-white shadow border-0 p-3">
+        <h6>Clientes por Día</h6>
+        <canvas id="clientes"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card bg-dark text-white shadow border-0 p-3">
+        <h6>Marketing</h6>
+        <canvas id="marketing"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card bg-dark text-white shadow border-0 p-3">
+        <h6>Tasa de Conversión</h6>
+        <canvas id="conversion"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-3">
+      <div class="card bg-dark text-white shadow border-0 p-3">
+        <h6>Pedidos</h6>
+        <canvas id="pedidos"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-3">
+      <div class="card bg-dark text-white shadow border-0 p-3">
+        <h6>Horas Pico</h6>
+        <canvas id="horas"></canvas>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHARTS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+async function cargarDashboard() {
+  const res = await fetch('/dashboard-view');
+  const data = await res.json();
+
+  // Ventas
+  new Chart(document.getElementById('ventas'), {
+    type: 'line',
+    data: {
+      labels: ['Ene','Feb','Mar','Abr','May','Jun'],
+      datasets: [{
+        label: 'Ventas',
+        data: data.ventas_mensuales,
+        borderColor: '#ffc107',
+        tension: 0.4
+      }]
+    }
+  });
+
+  // Platos
+  new Chart(document.getElementById('platos'), {
+    type: 'bar',
+    data: {
+      labels: data.platos_populares.labels,
+      datasets: [{
+        data: data.platos_populares.data,
+        backgroundColor: '#dc3545',
+        label: 'Unidades Vendidas'
+      }]
+    }
+  });
+
+  // Categorías
+  new Chart(document.getElementById('categorias'), {
+    type: 'doughnut',
+    data: {
+      labels: data.ventas_por_categoria.labels,
+      datasets: [{
+        data: data.ventas_por_categoria.data
+      }]
+    }
+  });
+
+  // Clientes
+  new Chart(document.getElementById('clientes'), {
+    type: 'line',
+    data: {
+      labels: ['L','M','X','J','V','S','D'],
+      datasets: [{
+        data: data.clientes_por_dia,
+        borderColor: '#0d6efd',
+        label: 'Clientes', 
+      }]
+    }
+  });
+
+  // Marketing
+  new Chart(document.getElementById('marketing'), {
+    type: 'pie',
+    data: {
+      labels: data.marketing.labels,
+      datasets: [{
+        data: data.marketing.data
+      }]
+    }
+  });
+
+  // Conversión
+  new Chart(document.getElementById('conversion'), {
+    type: 'bar',
+    data: {
+      labels: ['S1','S2','S3','S4','S5','S6'],
+      datasets: [{
+        data: data.tasa_conversion,
+        backgroundColor: '#198754',
+        label: 'Tasa de Conversión'
+      }]
+    }
+  });
+
+  // Pedidos
+  new Chart(document.getElementById('pedidos'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Online','Local'],
+      datasets: [{
+        data: data.pedidos_online_vs_local
+      }]
+    }
+  });
+
+  // Horas pico
+  new Chart(document.getElementById('horas'), {
+    type: 'bar',
+    data: {
+      labels: data.horas_pico.labels,
+      datasets: [{
+        data: data.horas_pico.data,
+        backgroundColor: '#ffc107',
+        label: 'Ventas por hora'
+      }]
+    }
+  });
+
+}
+
+cargarDashboard();
+</script>
