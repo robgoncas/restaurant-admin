@@ -27,4 +27,13 @@ app.use('/', view_routes);
 
 app.use('/api/auth', auth_routes);
 
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
+});
+
+process.on('uncaughtException', console.error);
+process.on('unhandledRejection', console.error);
+
 export default app;
